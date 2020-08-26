@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.content_main.*
 class MainActivity : AppCompatActivity() {
 
     companion object{
-        val className = MainActivity.javaClass.canonicalName
+        val className = MainActivity::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
