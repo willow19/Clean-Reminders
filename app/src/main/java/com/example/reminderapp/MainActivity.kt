@@ -2,22 +2,19 @@ package com.example.reminderapp
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.content_main.*
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    companion object{
+    companion object {
         val className = MainActivity::class.java.simpleName
     }
 
