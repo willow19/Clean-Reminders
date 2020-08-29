@@ -18,13 +18,26 @@ class MainActivity : AppCompatActivity() {
         val className = MainActivity::class.java.simpleName
     }
 
+    private lateinit var mTasksList: LinearLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        mTasksList = findViewById(R.id.layout_linear)
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             addView(view)
+        }
+
+        if (savedInstanceState != null) {
+            val tasksArray = savedInstanceState.getStringArray("active_tasks")
+            if (tasksArray != null) {
+                for (task in tasksArray) {
+                    addView(mTasksList, task)
+                }
+            }
         }
     }
 
@@ -44,26 +57,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val tasksList = mutableListOf<String>()
+        for (index in 0 until mTasksList.childCount) {
+            val taskLayout = mTasksList.getChildAt(index) as LinearLayout
+            val editText = taskLayout.getChildAt(1) as EditText
+            tasksList.add(editText.text.toString())
+        }
+        outState.putStringArray("active_tasks", tasksList.toTypedArray())
+    }
+
     private fun onCheckboxClicked(view: View) {
         Log.d(className, view.toString())
         Log.d(className, view.rootView.toString())
-        findViewById<LinearLayout>(R.id.layout_linear).removeView(view.parent as LinearLayout)
+        mTasksList.removeView(view.parent as LinearLayout)
     }
 
-    fun addView(view: View) {
+    fun addView(view: View, text: String = getString(R.string.text_placeholder)) {
         val checkBox = CheckBox(view.context)
         checkBox.setOnClickListener { cbView -> onCheckboxClicked(cbView) }
-        val editText = getEditText(view.context)
+        val editText = getEditText(view.context, text)
         val linearLayout = LinearLayout(view.context)
         linearLayout.orientation = LinearLayout.HORIZONTAL
         linearLayout.addView(checkBox)
         linearLayout.addView(editText)
-        findViewById<LinearLayout>(R.id.layout_linear).addView(linearLayout)
+        mTasksList.addView(linearLayout)
     }
 
-    private fun getEditText(context: Context): View {
+    private fun getEditText(context: Context, text: String): View {
         val editText = EditText(context)
-        editText.setText(getString(R.string.text_placeholder))
+        editText.setText(text)
         editText.maxLines = 1
         editText.setLines(1)
         editText.isSingleLine = true
